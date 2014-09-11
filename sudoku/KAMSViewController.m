@@ -8,7 +8,9 @@
 
 #import "KAMSViewController.h"
 
-@interface KAMSViewController ()
+@interface KAMSViewController () {
+    UIButton* _button;
+}
 
 @end
 
@@ -18,12 +20,27 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    
+    // create button
+    CGRect frame = self.view.frame;
+    _button = [[UIButton alloc] initWithFrame:frame];
+    [_button setTitle:@"Button" forState:UIControlStateNormal];
+    [_button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    _button.tag = 1;
+    [self.view addSubview: _button];
+    
+    [_button addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)buttonPressed:(id)sender
+{
+    NSLog(@"Button %d was pressed.", [sender tag]);
 }
 
 @end
