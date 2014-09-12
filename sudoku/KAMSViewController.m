@@ -22,8 +22,9 @@
 	// Do any additional setup after loading the view, typically from a nib.
     
     // create button
-    CGRect frame = self.view.frame;
+    CGRect frame = CGRectMake(100, 100, 200, 200);
     _button = [[UIButton alloc] initWithFrame:frame];
+    [_button setBackgroundImage:[KAMSViewController imageWithColor:[UIColor whiteColor]] forState:UIControlStateNormal];
     [_button setTitle:@"Button" forState:UIControlStateNormal];
     [_button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     _button.tag = 1;
@@ -41,6 +42,22 @@
 - (void)buttonPressed:(id)sender
 {
     NSLog(@"Button %d was pressed.", [sender tag]);
+}
+
+// obtained from http://stackoverflow.com/questions/6496441/creating-a-uiimage-from-a-uicolor-to-use-as-a-background-image-for-uibutton
++ (UIImage *)imageWithColor:(UIColor *)color
+{
+    CGRect rect = CGRectMake(0, 0, 1, 1);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
 }
 
 @end
