@@ -63,7 +63,7 @@ float INNER_GRID_RATIO = 0.25;
 }
 */
 
-// obtained from http://stackoverflow.com/questions/6496441/creating-a-uiimage-from-a-uicolor-to-use-as-a-background-image-for-uibutton
+// Obtained from http://stackoverflow.com/questions/6496441/creating-a-uiimage-from-a-uicolor-to-use-as-a-background-image-for-uibutton
 + (UIImage *)imageWithColor:(UIColor *)color
 {
     CGRect rect = CGRectMake(0, 0, 1, 1);
@@ -88,8 +88,8 @@ float INNER_GRID_RATIO = 0.25;
 
 - (void)cellSelected:(id)sender
 {
+    // Communicating with viewController.
     [_target performSelector:_action withObject:[NSNumber numberWithInt:[sender tag]]];
-    // TODO have this printing in the view controller (needs to set up target action with VC for grid)
 }
 
 -(void) setTarget:(id)target action:(SEL)action
@@ -97,6 +97,5 @@ float INNER_GRID_RATIO = 0.25;
     _target = target;
     _action = action;
 }
-
 
 @end

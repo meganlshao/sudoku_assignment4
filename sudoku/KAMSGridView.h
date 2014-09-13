@@ -11,7 +11,6 @@
 @interface KAMSGridView : UIView
 
 -(void)setValueAtRow:(int)row column:(int)column to:(int)value;
-
 -(void) setTarget:(id)target action:(SEL)action;
 
 @end

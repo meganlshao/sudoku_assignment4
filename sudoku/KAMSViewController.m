@@ -11,7 +11,7 @@
 
 // Initial grid provided in assignment 4.
 int initialGrid[9][9] = {
-    {7, 0, 0, 4, 2, 0, 0, 0, 9}, // This is the first column! C does column major order.
+    {7, 0, 0, 4, 2, 0, 0, 0, 9}, // C uses column major order.
     {0, 0, 9, 5, 0, 0 ,0 ,0, 4},
     {0, 2, 0, 6, 9, 0, 5, 0, 0},
     {6, 5, 0, 0, 0, 0, 4, 3, 0},
@@ -44,11 +44,9 @@ int initialGrid[9][9] = {
     
     _gridView = [[KAMSGridView alloc] initWithFrame:gridFrame];
     [_gridView setTarget:self action:@selector(gridCellSelected:)];
-
-    
     [self.view addSubview:_gridView];
     
-    // Set initial values
+    // Set initial values.
     for (int col = 0; col < 9; ++col) {
         for (int row = 0; row < 9; ++row) {
             int value = initialGrid[col][row];
@@ -67,9 +65,7 @@ int initialGrid[9][9] = {
 
 - (void)gridCellSelected:(NSNumber*)tag
 {
-    // TODO have this printing in the view controller (needs to set up target action with VC for grid)
     NSLog(@"Button at column %d and row %d was pressed.", [tag intValue] / 10, [tag intValue] % 10);
-    //NSLog(@"message");
 }
 
 @end
