@@ -21,6 +21,7 @@
 		AFB4C56019C25C7600AE4A44 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFB4C54219C25C7600AE4A44 /* UIKit.framework */; };
 		AFB4C56819C25C7600AE4A44 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = AFB4C56619C25C7600AE4A44 /* InfoPlist.strings */; };
 		AFB4C56A19C25C7600AE4A44 /* sudokuTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AFB4C56919C25C7600AE4A44 /* sudokuTests.m */; };
+		AFE855E819C3788500140CA8 /* KAMSGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = AFE855E719C3788500140CA8 /* KAMSGridView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,8 @@
 		AFB4C56519C25C7600AE4A44 /* sudokuTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "sudokuTests-Info.plist"; sourceTree = "<group>"; };
 		AFB4C56719C25C7600AE4A44 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		AFB4C56919C25C7600AE4A44 /* sudokuTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = sudokuTests.m; sourceTree = "<group>"; };
+		AFE855E619C3788500140CA8 /* KAMSGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KAMSGridView.h; sourceTree = "<group>"; };
+		AFE855E719C3788500140CA8 /* KAMSGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KAMSGridView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +122,8 @@
 				AFB4C55419C25C7600AE4A44 /* KAMSViewController.m */,
 				AFB4C55619C25C7600AE4A44 /* Images.xcassets */,
 				AFB4C54519C25C7600AE4A44 /* Supporting Files */,
+				AFE855E619C3788500140CA8 /* KAMSGridView.h */,
+				AFE855E719C3788500140CA8 /* KAMSGridView.m */,
 			);
 			path = sudoku;
 			sourceTree = "<group>";
@@ -252,6 +257,7 @@
 			files = (
 				AFB4C54F19C25C7600AE4A44 /* KAMSAppDelegate.m in Sources */,
 				AFB4C55519C25C7600AE4A44 /* KAMSViewController.m in Sources */,
+				AFE855E819C3788500140CA8 /* KAMSGridView.m in Sources */,
 				AFB4C54B19C25C7600AE4A44 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -459,6 +465,7 @@
 				AFB4C56F19C25C7600AE4A44 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		AFB4C57019C25C7600AE4A44 /* Build configuration list for PBXNativeTarget "sudokuTests" */ = {
 			isa = XCConfigurationList;
@@ -467,6 +474,7 @@
 				AFB4C57219C25C7600AE4A44 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
