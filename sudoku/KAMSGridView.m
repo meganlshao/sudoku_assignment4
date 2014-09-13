@@ -8,8 +8,13 @@
 
 #import "KAMSGridView.h"
 
+float OUTER_GRID_RATIO = 0.5;
+float INNER_GRID_RATIO = 0.25;
+
 @interface KAMSGridView() {
-    NSMutableArray *_cells; // TODO add buttons to the cells. Have it be nested (rows and cols)
+    NSMutableArray* _cells;
+    id _target;
+    SEL _action;
 }
 
 @end
@@ -23,25 +28,29 @@
         self.backgroundColor = [UIColor blackColor];
         CGFloat size = CGRectGetHeight(frame);
         
-        CGFloat buttonSize = size / 9.0; // TODO make it so we have black borders. Currently will cover all black;
+        CGFloat buttonSize = size / (9 + 4 * OUTER_GRID_RATIO + 6 * INNER_GRID_RATIO);
         
+        _cells = [[NSMutableArray alloc] initWithCapacity: 9];
         // Create 81 buttons that each respond when pressed.
         for (int col = 0; col < 9; ++col) {
-            NSMutableArray *currentCol;
+            NSMutableArray *currentCol = [[NSMutableArray alloc] initWithCapacity: 9];
             for (int row = 0; row < 9; ++row) {
-                CGRect buttonFrame = CGRectMake(col * buttonSize, row * buttonSize, buttonSize, buttonSize);
+                int offsetX = buttonSize * OUTER_GRID_RATIO + ((col / 3) * (buttonSize * OUTER_GRID_RATIO)) + (((col / 3) * 2) + (col % 3)) * (buttonSize * INNER_GRID_RATIO);
+                int offsetY = buttonSize * OUTER_GRID_RATIO + ((row / 3) * (buttonSize * OUTER_GRID_RATIO)) + (((row / 3) * 2) + (row % 3)) * (buttonSize * INNER_GRID_RATIO);
+                CGRect buttonFrame = CGRectMake(offsetX + col * buttonSize, offsetY + row * buttonSize, buttonSize, buttonSize);
                 UIButton* gridButton = [[UIButton alloc] initWithFrame:buttonFrame];
                 [gridButton setBackgroundImage:[KAMSGridView imageWithColor:[UIColor whiteColor]] forState:UIControlStateNormal];
                 [gridButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 // Each button's tag is [col][row]. So 87 means column 8 row 7.
                 gridButton.tag = col * 10 + row;
-                [gridButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+                [gridButton addTarget:self action:@selector(cellSelected:) forControlEvents:UIControlEventTouchUpInside];
                 
                 [self addSubview:gridButton];
                 [currentCol addObject:gridButton];
             }
             [_cells addObject:currentCol];
-        }    }
+        }
+    }
     return self;
 }
 
@@ -70,16 +79,23 @@
     return image;
 }
 
-- (void)buttonPressed:(id)sender
-{
-    // TODO have this printing in the view controller (needs to set up target action with VC for grid)
-    NSLog(@"Button at column %d and row %d was pressed.", [sender tag] / 10, [sender tag] % 10);
-}
-
-// TODO set titles of each button to give them a value                 [gridButton setTitle:[NSString stringWithFormat:@"%d", initialGrid[col][row]] forState:UIControlStateNormal];
 - (void)setValueAtRow:(int)row column:(int)column to:(int)value
 {
-    [(UIButton*) _cells[column][row] setTitle:[NSString stringWithFormat:@"%d", value] forState:UIControlStateNormal];
+    UIButton* temp = [[_cells objectAtIndex:column] objectAtIndex:row];
+    [temp setTitle:[NSString stringWithFormat:@"%d", value] forState:UIControlStateNormal];
+    [temp setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+}
+
+- (void)cellSelected:(id)sender
+{
+    [_target performSelector:_action withObject:[NSNumber numberWithInt:[sender tag]]];
+    // TODO have this printing in the view controller (needs to set up target action with VC for grid)
+}
+
+-(void) setTarget:(id)target action:(SEL)action
+{
+    _target = target;
+    _action = action;
 }
 
 

@@ -43,17 +43,20 @@ int initialGrid[9][9] = {
     CGRect gridFrame = CGRectMake(x, y, size, size);
     
     _gridView = [[KAMSGridView alloc] initWithFrame:gridFrame];
+    [_gridView setTarget:self action:@selector(gridCellSelected:)];
+
     
     [self.view addSubview:_gridView];
     
     // Set initial values
     for (int col = 0; col < 9; ++col) {
         for (int row = 0; row < 9; ++row) {
-            [_gridView  setValueAtRow:row column:col to:initialGrid[col][row]];
+            int value = initialGrid[col][row];
+            if (value != 0) {
+                [_gridView setValueAtRow:row column:col to:value];
+            }
         }
     }
-    
-    // TODO values aren't appearing in the titles. Fix it!
 }
 
 - (void)didReceiveMemoryWarning
@@ -62,8 +65,11 @@ int initialGrid[9][9] = {
     // Dispose of any resources that can be recreated.
 }
 
-
-
-
+- (void)gridCellSelected:(NSNumber*)tag
+{
+    // TODO have this printing in the view controller (needs to set up target action with VC for grid)
+    NSLog(@"Button at column %d and row %d was pressed.", [tag intValue] / 10, [tag intValue] % 10);
+    //NSLog(@"message");
+}
 
 @end
