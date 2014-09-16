@@ -32,9 +32,10 @@ float INNER_GRID_RATIO = 0.25;
         
         _cells = [[NSMutableArray alloc] initWithCapacity: 9];
         // Create 81 buttons that each respond when pressed.
-        for (int col = 0; col < 9; ++col) {
-            NSMutableArray *currentCol = [[NSMutableArray alloc] initWithCapacity: 9];
-            for (int row = 0; row < 9; ++row) {
+        for (int row = 0; row < 9; ++row) {
+            NSMutableArray *currentRow = [[NSMutableArray alloc] initWithCapacity: 9];
+            for (int col = 0; col < 9; ++col) {
+            
                 int offsetX = buttonSize * OUTER_GRID_RATIO + ((col / 3) * (buttonSize * OUTER_GRID_RATIO)) + (((col / 3) * 2) + (col % 3)) * (buttonSize * INNER_GRID_RATIO);
                 int offsetY = buttonSize * OUTER_GRID_RATIO + ((row / 3) * (buttonSize * OUTER_GRID_RATIO)) + (((row / 3) * 2) + (row % 3)) * (buttonSize * INNER_GRID_RATIO);
                 CGRect buttonFrame = CGRectMake(offsetX + col * buttonSize, offsetY + row * buttonSize, buttonSize, buttonSize);
@@ -46,9 +47,9 @@ float INNER_GRID_RATIO = 0.25;
                 [gridButton addTarget:self action:@selector(cellSelected:) forControlEvents:UIControlEventTouchUpInside];
                 
                 [self addSubview:gridButton];
-                [currentCol addObject:gridButton];
+                [currentRow addObject:gridButton];
             }
-            [_cells addObject:currentCol];
+            [_cells addObject:currentRow];
         }
     }
     return self;
@@ -81,7 +82,7 @@ float INNER_GRID_RATIO = 0.25;
 
 - (void)setValueAtRow:(int)row column:(int)column to:(int)value
 {
-    UIButton* temp = [[_cells objectAtIndex:column] objectAtIndex:row];
+    UIButton* temp = [[_cells objectAtIndex:row] objectAtIndex:column];
     [temp setTitle:[NSString stringWithFormat:@"%d", value] forState:UIControlStateNormal];
     [temp setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
 }
