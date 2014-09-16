@@ -10,8 +10,12 @@
 #import "KAMSGridView.h"
 
 // Initial grid provided in assignment 4.
+// Note that we access this grid in row major order. This means that our displayed
+// grid is the transpose of the screenshot in assignment 4. However, the screenshot
+// assumed column major order, which C is not. Our grid then displays the transpose
+// of the grid in the screenshot, so it is still a valid grid.
 int initialGrid[9][9] = {
-    {7, 0, 0, 4, 2, 0, 0, 0, 9}, // C uses column major order.
+    {7, 0, 0, 4, 2, 0, 0, 0, 9},
     {0, 0, 9, 5, 0, 0 ,0 ,0, 4},
     {0, 2, 0, 6, 9, 0, 5, 0, 0},
     {6, 5, 0, 0, 0, 0, 4, 3, 0},
@@ -49,7 +53,7 @@ int initialGrid[9][9] = {
     // Set initial values.
     for (int col = 0; col < 9; ++col) {
         for (int row = 0; row < 9; ++row) {
-            int value = initialGrid[col][row];
+            int value = initialGrid[row][col];
             if (value != 0) {
                 [_gridView setValueAtRow:row column:col to:value];
             }
