@@ -55,16 +55,7 @@ float INNER_GRID_RATIO = 0.25;
     return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
-
-// Obtained from http://stackoverflow.com/questions/6496441/creating-a-uiimage-from-a-uicolor-to-use-as-a-background-image-for-uibutton
+// Obtained from http://stackoverflow.com/questions/6496441/
 + (UIImage *)imageWithColor:(UIColor *)color
 {
     CGRect rect = CGRectMake(0, 0, 1, 1);
@@ -80,19 +71,28 @@ float INNER_GRID_RATIO = 0.25;
     return image;
 }
 
-- (void)setValueAtRow:(int)row column:(int)column to:(int)value
+/*
+ * Sets the value of a cell at the given row, column to the given value.
+ */
+- (void)setValueAtRow:(int)row atColumn:(int)column toValue:(int)value
 {
-    UIButton* temp = [[_cells objectAtIndex:row] objectAtIndex:column];
-    [temp setTitle:[NSString stringWithFormat:@"%d", value] forState:UIControlStateNormal];
-    [temp setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    UIButton* selected = [[_cells objectAtIndex:row] objectAtIndex:column];
+    [selected setTitle:[NSString stringWithFormat:@"%d", value]
+        forState:UIControlStateNormal];
 }
 
 - (void)cellSelected:(id)sender
 {
     // Communicating with viewController.
-    [_target performSelector:_action withObject:[NSNumber numberWithInt:[sender tag]]];
+    // First argument is row, second is column.
+    [_target performSelector:_action
+        withObject:[NSNumber numberWithInt:[sender tag] % 10]
+        withObject:[NSNumber numberWithInt:[sender tag] / 10]];
 }
 
+/*
+ * Sets the target and action for when a cell is slected in the grid.
+ */
 -(void) setTarget:(id)target action:(SEL)action
 {
     _target = target;
