@@ -8,8 +8,12 @@
 
 #import "KAMSGridView.h"
 
-float OUTER_GRID_RATIO = 0.5;
-float INNER_GRID_RATIO = 0.25;
+// Border to button size ratios.
+static float LARGE_GRID_BORDER_RATIO = 0.5;
+static float SMALL_GRID_BORDER_RATIO = 0.25;
+
+static int NUM_LARGE_GRID_BORDERS = 4;
+static int NUM_SMALL_GRID_BORDERS = 6;
 
 @interface KAMSGridView() {
     NSMutableArray* _cells;
@@ -28,23 +32,42 @@ float INNER_GRID_RATIO = 0.25;
         self.backgroundColor = [UIColor blackColor];
         CGFloat size = CGRectGetHeight(frame);
         
-        CGFloat buttonSize = size / (9 + 4 * OUTER_GRID_RATIO + 6 * INNER_GRID_RATIO);
+        // Treat buttonSize as an unit to fill screen with cells and borders.
+        // effectiveNumButtons is the number of these units.
+        CGFloat effectiveNumButtons = 9
+            + (NUM_LARGE_GRID_BORDERS * LARGE_GRID_BORDER_RATIO)
+            + (NUM_SMALL_GRID_BORDERS * SMALL_GRID_BORDER_RATIO);
+        
+        CGFloat buttonSize = size / effectiveNumButtons;
         
         _cells = [[NSMutableArray alloc] initWithCapacity: 9];
         // Create 81 buttons that each respond when pressed.
         for (int row = 0; row < 9; ++row) {
-            NSMutableArray *currentRow = [[NSMutableArray alloc] initWithCapacity: 9];
+            NSMutableArray *currentRow =
+                [[NSMutableArray alloc] initWithCapacity: 9];
             for (int col = 0; col < 9; ++col) {
             
-                int offsetX = buttonSize * OUTER_GRID_RATIO + ((col / 3) * (buttonSize * OUTER_GRID_RATIO)) + (((col / 3) * 2) + (col % 3)) * (buttonSize * INNER_GRID_RATIO);
-                int offsetY = buttonSize * OUTER_GRID_RATIO + ((row / 3) * (buttonSize * OUTER_GRID_RATIO)) + (((row / 3) * 2) + (row % 3)) * (buttonSize * INNER_GRID_RATIO);
-                CGRect buttonFrame = CGRectMake(offsetX + col * buttonSize, offsetY + row * buttonSize, buttonSize, buttonSize);
-                UIButton* gridButton = [[UIButton alloc] initWithFrame:buttonFrame];
-                [gridButton setBackgroundImage:[KAMSGridView imageWithColor:[UIColor whiteColor]] forState:UIControlStateNormal];
-                [gridButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                int horizontalOffset =
+                    [KAMSGridView horizontalOffsetFromColumn:col
+                    forButtonSize:buttonSize];
+                int verticalOffset =
+                    [KAMSGridView verticalOffsetFromRow:row
+                    forButtonSize:buttonSize];
+                
+                CGRect buttonFrame = CGRectMake(horizontalOffset,
+                    verticalOffset, buttonSize, buttonSize);
+                UIButton* gridButton =
+                    [[UIButton alloc] initWithFrame:buttonFrame];
+                [gridButton setBackgroundImage:[KAMSGridView
+                    imageWithColor:[UIColor whiteColor]]
+                    forState:UIControlStateNormal];
+                [gridButton setTitleColor:[UIColor blackColor]
+                    forState:UIControlStateNormal];
+                
                 // Each button's tag is [col][row]. So 87 means column 8 row 7.
                 gridButton.tag = col * 10 + row;
-                [gridButton addTarget:self action:@selector(cellSelected:) forControlEvents:UIControlEventTouchUpInside];
+                [gridButton addTarget:self action:@selector(cellSelected:)
+                     forControlEvents:UIControlEventTouchUpInside];
                 
                 [self addSubview:gridButton];
                 [currentRow addObject:gridButton];
@@ -55,16 +78,7 @@ float INNER_GRID_RATIO = 0.25;
     return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
-
-// Obtained from http://stackoverflow.com/questions/6496441/creating-a-uiimage-from-a-uicolor-to-use-as-a-background-image-for-uibutton
+// Obtained from http://stackoverflow.com/questions/6496441/
 + (UIImage *)imageWithColor:(UIColor *)color
 {
     CGRect rect = CGRectMake(0, 0, 1, 1);
@@ -80,23 +94,58 @@ float INNER_GRID_RATIO = 0.25;
     return image;
 }
 
-- (void)setValueAtRow:(int)row column:(int)column to:(int)value
+/**
+ * Sets the value of a cell at the given row, column to the given value.
+ */
+- (void)setValueAtRow:(int)row atColumn:(int)column toValue:(int)value
 {
-    UIButton* temp = [[_cells objectAtIndex:row] objectAtIndex:column];
-    [temp setTitle:[NSString stringWithFormat:@"%d", value] forState:UIControlStateNormal];
-    [temp setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    UIButton* selected = [[_cells objectAtIndex:row] objectAtIndex:column];
+    [selected setTitle:[NSString stringWithFormat:@"%d", value]
+        forState:UIControlStateNormal];
 }
 
-- (void)cellSelected:(id)sender
-{
-    // Communicating with viewController.
-    [_target performSelector:_action withObject:[NSNumber numberWithInt:[sender tag]]];
-}
-
+/**
+ * Sets the target and action for when a cell is slected in the grid.
+ */
 -(void) setTarget:(id)target action:(SEL)action
 {
     _target = target;
     _action = action;
 }
 
+- (void)cellSelected:(id)sender
+{
+    // Communicating with viewController.
+    // First argument is row, second is column.
+    [_target performSelector:_action
+                  withObject:[NSNumber numberWithInt:[sender tag] % 10]
+                  withObject:[NSNumber numberWithInt:[sender tag] / 10]];
+}
+
++ (int)verticalOffsetFromRow:(int)row forButtonSize:(CGFloat)buttonSize
+{
+    return [KAMSGridView offsetFromAxis:row forButtonSize:buttonSize];
+}
+
++ (int)horizontalOffsetFromColumn:(int)column forButtonSize:(CGFloat)buttonSize
+{
+    return [KAMSGridView offsetFromAxis:column forButtonSize:buttonSize];
+}
+
++ (int)offsetFromAxis:(int) axis forButtonSize:(CGFloat) buttonSize
+{
+    int numBlocksPerAxis = 3;
+    int currentBlock = axis / numBlocksPerAxis;
+    int numInnerBordersPerBlock = 2;
+    int numInnerBordersForCurrentBlock = axis % 3;
+    
+    int largeBorderOffsets = (currentBlock + 1) * LARGE_GRID_BORDER_RATIO
+    * buttonSize;
+    int smallBorderOffsets = ((currentBlock * numInnerBordersPerBlock)
+                              + numInnerBordersForCurrentBlock)
+    * (buttonSize * SMALL_GRID_BORDER_RATIO);
+    int offsetsFromPreviousButtons = axis * buttonSize;
+    
+    return largeBorderOffsets + smallBorderOffsets + offsetsFromPreviousButtons;
+}
 @end
