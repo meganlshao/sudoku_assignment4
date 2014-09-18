@@ -36,8 +36,9 @@ float INNER_GRID_RATIO = 0.25;
             NSMutableArray *currentRow = [[NSMutableArray alloc] initWithCapacity: 9];
             for (int col = 0; col < 9; ++col) {
             
-                int offsetX = buttonSize * OUTER_GRID_RATIO + ((col / 3) * (buttonSize * OUTER_GRID_RATIO)) + (((col / 3) * 2) + (col % 3)) * (buttonSize * INNER_GRID_RATIO);
-                int offsetY = buttonSize * OUTER_GRID_RATIO + ((row / 3) * (buttonSize * OUTER_GRID_RATIO)) + (((row / 3) * 2) + (row % 3)) * (buttonSize * INNER_GRID_RATIO);
+                int offsetX = [KAMSGridView horizontalOffsetFromColumn:col forButtonSize:buttonSize];
+                int offsetY = [KAMSGridView verticalOffsetFromRow:row forButtonSize:buttonSize];
+                
                 CGRect buttonFrame = CGRectMake(offsetX + col * buttonSize, offsetY + row * buttonSize, buttonSize, buttonSize);
                 UIButton* gridButton = [[UIButton alloc] initWithFrame:buttonFrame];
                 [gridButton setBackgroundImage:[KAMSGridView imageWithColor:[UIColor whiteColor]] forState:UIControlStateNormal];
@@ -53,6 +54,21 @@ float INNER_GRID_RATIO = 0.25;
         }
     }
     return self;
+}
+
++ (int)verticalOffsetFromRow:(int)row forButtonSize:(CGFloat)buttonSize
+{
+    return [KAMSGridView offsetFromAxis:row forButtonSize:buttonSize];
+}
+
++ (int)horizontalOffsetFromColumn:(int)column forButtonSize:(CGFloat)buttonSize
+{
+    return [KAMSGridView offsetFromAxis:column forButtonSize:buttonSize];
+}
+
++ (int)offsetFromAxis:(int) axis forButtonSize:(CGFloat) buttonSize
+{
+    return buttonSize * OUTER_GRID_RATIO + ((axis / 3) * (buttonSize * OUTER_GRID_RATIO)) + (((axis / 3) * 2) + (axis % 3)) * (buttonSize * INNER_GRID_RATIO);
 }
 
 // Obtained from http://stackoverflow.com/questions/6496441/
