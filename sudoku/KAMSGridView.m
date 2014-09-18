@@ -78,6 +78,50 @@ static int NUM_SMALL_GRID_BORDERS = 6;
     return self;
 }
 
+// Obtained from http://stackoverflow.com/questions/6496441/
++ (UIImage *)imageWithColor:(UIColor *)color
+{
+    CGRect rect = CGRectMake(0, 0, 1, 1);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
+/**
+ * Sets the value of a cell at the given row, column to the given value.
+ */
+- (void)setValueAtRow:(int)row atColumn:(int)column toValue:(int)value
+{
+    UIButton* selected = [[_cells objectAtIndex:row] objectAtIndex:column];
+    [selected setTitle:[NSString stringWithFormat:@"%d", value]
+        forState:UIControlStateNormal];
+}
+
+/**
+ * Sets the target and action for when a cell is slected in the grid.
+ */
+-(void) setTarget:(id)target action:(SEL)action
+{
+    _target = target;
+    _action = action;
+}
+
+- (void)cellSelected:(id)sender
+{
+    // Communicating with viewController.
+    // First argument is row, second is column.
+    [_target performSelector:_action
+                  withObject:[NSNumber numberWithInt:[sender tag] % 10]
+                  withObject:[NSNumber numberWithInt:[sender tag] / 10]];
+}
+
 + (int)verticalOffsetFromRow:(int)row forButtonSize:(CGFloat)buttonSize
 {
     return [KAMSGridView offsetFromAxis:row forButtonSize:buttonSize];
@@ -96,57 +140,12 @@ static int NUM_SMALL_GRID_BORDERS = 6;
     int numInnerBordersForCurrentBlock = axis % 3;
     
     int largeBorderOffsets = (currentBlock + 1) * LARGE_GRID_BORDER_RATIO
-        * buttonSize;
+    * buttonSize;
     int smallBorderOffsets = ((currentBlock * numInnerBordersPerBlock)
-        + numInnerBordersForCurrentBlock)
-        * (buttonSize * SMALL_GRID_BORDER_RATIO);
+                              + numInnerBordersForCurrentBlock)
+    * (buttonSize * SMALL_GRID_BORDER_RATIO);
     int offsetsFromPreviousButtons = axis * buttonSize;
     
     return largeBorderOffsets + smallBorderOffsets + offsetsFromPreviousButtons;
 }
-
-// Obtained from http://stackoverflow.com/questions/6496441/
-+ (UIImage *)imageWithColor:(UIColor *)color
-{
-    CGRect rect = CGRectMake(0, 0, 1, 1);
-    UIGraphicsBeginImageContext(rect.size);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextSetFillColorWithColor(context, [color CGColor]);
-    CGContextFillRect(context, rect);
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return image;
-}
-
-/*
- * Sets the value of a cell at the given row, column to the given value.
- */
-- (void)setValueAtRow:(int)row atColumn:(int)column toValue:(int)value
-{
-    UIButton* selected = [[_cells objectAtIndex:row] objectAtIndex:column];
-    [selected setTitle:[NSString stringWithFormat:@"%d", value]
-        forState:UIControlStateNormal];
-}
-
-- (void)cellSelected:(id)sender
-{
-    // Communicating with viewController.
-    // First argument is row, second is column.
-    [_target performSelector:_action
-        withObject:[NSNumber numberWithInt:[sender tag] % 10]
-        withObject:[NSNumber numberWithInt:[sender tag] / 10]];
-}
-
-/*
- * Sets the target and action for when a cell is slected in the grid.
- */
--(void) setTarget:(id)target action:(SEL)action
-{
-    _target = target;
-    _action = action;
-}
-
 @end

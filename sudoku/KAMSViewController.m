@@ -58,9 +58,7 @@ static float GRID_FRAME_SIZE_FACTOR = 0.8;
     NSLog(@"Button at column %@ and row %@ was pressed.", column, row);
 }
 
-/*
- * Create gridView frame. Uses code from ViewTutorial (Assignment 3).
- */
+// Uses code from ViewTutorial (Assignment 3).
 - (void)initializeGridView
 {
     float offsetFactor = (1 - GRID_FRAME_SIZE_FACTOR) / 2.0;
