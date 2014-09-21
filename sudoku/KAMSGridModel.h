@@ -10,4 +10,10 @@
 
 @interface KAMSGridModel : NSObject
 
+-(void) generateGrid;
+-(int) getValueAtRow:(int)row atColumn:(int)column;
+-(void) setValueAtRow:(int)row atColumn:(int)column toValue:(int)value;
+-(BOOL) isMutableAtRow:(int)row atColumn:(int)column;
+-(BOOL) isConsistentAtRow:(int)row atColumn:(int)column forValue:(int)value;
+
 @end
