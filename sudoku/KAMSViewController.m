@@ -83,7 +83,7 @@ static float GRID_FRAME_SIZE_FACTOR = 0.8;
             int value = INITIAL_GRID[row][col];
             // 0 represents an empty cell
             if (value != 0) {
-                [_gridView setValueAtRow:row atColumn:col toValue:value];
+                [_gridView setInitialValueAtRow:row atColumn:col toValue:value];
             }
         }
     }

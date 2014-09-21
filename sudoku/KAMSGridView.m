@@ -61,7 +61,7 @@ static int NUM_SMALL_GRID_BORDERS = 6;
                 [gridButton setBackgroundImage:[KAMSGridView
                     imageWithColor:[UIColor whiteColor]]
                     forState:UIControlStateNormal];
-                [gridButton setTitleColor:[UIColor blackColor]
+                [gridButton setTitleColor:[KAMSGridView cellTextColor]
                     forState:UIControlStateNormal];
                 
                 // Each button's tag is [col][row]. So 87 means column 8 row 7.
@@ -102,6 +102,21 @@ static int NUM_SMALL_GRID_BORDERS = 6;
     UIButton* selected = [[_cells objectAtIndex:row] objectAtIndex:column];
     [selected setTitle:[NSString stringWithFormat:@"%d", value]
         forState:UIControlStateNormal];
+}
+
+/**
+ * Set initial value of a cell at the given row, column to the given value.
+ * Disables the cell, colors the cell differently.
+ */
+- (void)setInitialValueAtRow:(int)row atColumn:(int)column toValue:(int)value
+{
+    UIButton* cell = [[_cells objectAtIndex:row] objectAtIndex:column];
+    [cell setTitleColor:[KAMSGridView initialCellTextColor]
+        forState:UIControlStateNormal];
+    [cell setBackgroundImage:[KAMSGridView imageWithColor:[UIColor whiteColor]]
+        forState:UIControlStateDisabled];
+    [cell setEnabled:NO];
+    [self setValueAtRow:row atColumn:column toValue:value];
 }
 
 /**
@@ -147,5 +162,15 @@ static int NUM_SMALL_GRID_BORDERS = 6;
     int offsetsFromPreviousButtons = axis * buttonSize;
     
     return largeBorderOffsets + smallBorderOffsets + offsetsFromPreviousButtons;
+}
+
++ (UIColor*) initialCellTextColor
+{
+    return [UIColor blueColor];
+}
+
++ (UIColor*) cellTextColor
+{
+    return [UIColor blackColor];
 }
 @end
