@@ -10,4 +10,6 @@
 
 @interface KAMSNumPadView : UIView
 
+-(int) getCurrentValue;
+
 @end

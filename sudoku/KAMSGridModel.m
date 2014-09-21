@@ -65,7 +65,7 @@ static int INITIAL_GRID[9][9] = {
  */
 -(void) setValueAtRow:(int)row atColumn:(int)column toValue:(int)value
 {
-    
+    _currentGrid[row][column] = value;
 }
 
 /**
@@ -73,7 +73,7 @@ static int INITIAL_GRID[9][9] = {
  */
 -(BOOL) isMutableAtRow:(int)row atColumn:(int)column
 {
-    return _initialGrid[row][column] != 0;
+    return _initialGrid[row][column] == 0;
 }
 
 /**
