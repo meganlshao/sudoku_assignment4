@@ -7,6 +7,7 @@
 //
 
 #import "KAMSGridView.h"
+#import "KAMSSolidImageUtility.h"
 
 // Border to button size ratios.
 static float LARGE_GRID_BORDER_RATIO = 0.5;
@@ -16,7 +17,7 @@ static int NUM_LARGE_GRID_BORDERS = 4;
 static int NUM_SMALL_GRID_BORDERS = 6;
 
 @interface KAMSGridView() {
-    NSMutableArray* _cells;
+    NSMutableArray *_cells;
     id _target;
     SEL _action;
 }
@@ -56,12 +57,12 @@ static int NUM_SMALL_GRID_BORDERS = 6;
                 
                 CGRect buttonFrame = CGRectMake(horizontalOffset,
                     verticalOffset, buttonSize, buttonSize);
-                UIButton* gridButton =
+                UIButton *gridButton =
                     [[UIButton alloc] initWithFrame:buttonFrame];
-                [gridButton setBackgroundImage:[KAMSGridView
+                [gridButton setBackgroundImage:[KAMSSolidImageUtility
                     imageWithColor:[UIColor whiteColor]]
                     forState:UIControlStateNormal];
-                [gridButton setTitleColor:[UIColor blackColor]
+                [gridButton setTitleColor:[KAMSGridView cellTextColor]
                     forState:UIControlStateNormal];
                 
                 // Each button's tag is [col][row]. So 87 means column 8 row 7.
@@ -78,30 +79,30 @@ static int NUM_SMALL_GRID_BORDERS = 6;
     return self;
 }
 
-// Obtained from http://stackoverflow.com/questions/6496441/
-+ (UIImage *)imageWithColor:(UIColor *)color
-{
-    CGRect rect = CGRectMake(0, 0, 1, 1);
-    UIGraphicsBeginImageContext(rect.size);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextSetFillColorWithColor(context, [color CGColor]);
-    CGContextFillRect(context, rect);
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return image;
-}
-
 /**
  * Sets the value of a cell at the given row, column to the given value.
  */
 - (void)setValueAtRow:(int)row atColumn:(int)column toValue:(int)value
 {
-    UIButton* selected = [[_cells objectAtIndex:row] objectAtIndex:column];
+    UIButton *selected = [[_cells objectAtIndex:row] objectAtIndex:column];
     [selected setTitle:[NSString stringWithFormat:@"%d", value]
         forState:UIControlStateNormal];
+}
+
+/**
+ * Set initial value of a cell at the given row, column to the given value.
+ * Disables the cell, colors the cell differently.
+ */
+- (void)setInitialValueAtRow:(int)row atColumn:(int)column toValue:(int)value
+{
+    UIButton *cell = [[_cells objectAtIndex:row] objectAtIndex:column];
+    [cell setTitleColor:[KAMSGridView initialCellTextColor]
+        forState:UIControlStateNormal];
+    [cell setBackgroundImage:[KAMSSolidImageUtility
+        imageWithColor:[UIColor whiteColor]]
+        forState:UIControlStateDisabled];
+    [cell setEnabled:NO];
+    [self setValueAtRow:row atColumn:column toValue:value];
 }
 
 /**
@@ -147,5 +148,15 @@ static int NUM_SMALL_GRID_BORDERS = 6;
     int offsetsFromPreviousButtons = axis * buttonSize;
     
     return largeBorderOffsets + smallBorderOffsets + offsetsFromPreviousButtons;
+}
+
++ (UIColor*)initialCellTextColor
+{
+    return [UIColor blueColor];
+}
+
++ (UIColor*)cellTextColor
+{
+    return [UIColor blackColor];
 }
 @end

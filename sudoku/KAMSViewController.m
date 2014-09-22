@@ -8,29 +8,19 @@
 
 #import "KAMSViewController.h"
 #import "KAMSGridView.h"
+#import "KAMSNumPadView.h"
+#import "KAMSGridModel.h"
 
-// Initial grid provided in assignment 4.
-// Note that we access this grid in row major order. This means that our
-// displayed grid is the transpose of the screenshot in assignment 4. However,
-// the screenshot assumed column major order, which C is not. Our grid then
-// displays the transpose of the grid in the screenshot, so it is still a valid
-// grid.
-static int INITIAL_GRID[9][9] = {
-    {7, 0, 0, 4, 2, 0, 0, 0, 9},
-    {0, 0, 9, 5, 0, 0 ,0 ,0, 4},
-    {0, 2, 0, 6, 9, 0, 5, 0, 0},
-    {6, 5, 0, 0, 0, 0, 4, 3, 0},
-    {0, 8, 0, 0, 0, 6, 0, 0, 7},
-    {0, 1, 0, 0, 4, 5, 6, 0, 0},
-    {0, 0, 0, 8, 6, 0, 0, 0, 2},
-    {3, 4, 0, 9, 0, 0, 1, 0, 0},
-    {8, 0, 0, 3, 0, 2, 7, 4, 0}
-};
 
 static float GRID_FRAME_SIZE_FACTOR = 0.8;
 
+static float NUM_PAD_OFFSET_FACTOR = 0.1;
+static float NUM_PAD_HEIGHT_FACTOR = 1.0 / 7;
+
 @interface KAMSViewController () {
     KAMSGridView *_gridView;
+    KAMSNumPadView *_numPadView;
+    KAMSGridModel *_gridModel;
 }
 
 @end
@@ -44,7 +34,10 @@ static float GRID_FRAME_SIZE_FACTOR = 0.8;
     
     [self initializeGridView];
     
+    [self initializeGridModel];
     [self setInitialGridValues];
+    
+    [self initializeNumPadView];
 }
 
 - (void)didReceiveMemoryWarning
@@ -55,7 +48,19 @@ static float GRID_FRAME_SIZE_FACTOR = 0.8;
 
 - (void)gridCellSelectedAtRow:(NSNumber*)row column:(NSNumber*)column
 {
-    NSLog(@"Button at column %@ and row %@ was pressed.", column, row);
+    int rowIntVal = [row intValue];
+    int colIntVal = [column intValue];
+    
+    if ([_gridModel isMutableAtRow:rowIntVal atColumn:colIntVal]) {
+        int selectedNumber = [_numPadView getCurrentValue];
+        if ([_gridModel isConsistentAtRow:rowIntVal atColumn:colIntVal
+            forValue:selectedNumber]) {
+            [_gridModel setValueAtRow:rowIntVal atColumn:colIntVal
+                toValue:selectedNumber];
+            [_gridView setValueAtRow:rowIntVal atColumn:colIntVal
+                toValue:selectedNumber];
+        }
+    }
 }
 
 // Uses code from ViewTutorial (Assignment 3).
@@ -76,17 +81,38 @@ static float GRID_FRAME_SIZE_FACTOR = 0.8;
     [self.view addSubview:_gridView];
 }
 
+- (void)initializeNumPadView
+{
+    float offsetFactor = (1 - GRID_FRAME_SIZE_FACTOR) / 2.0;
+    
+    CGRect frame = self.view.frame;
+    CGFloat x = CGRectGetWidth(frame) * offsetFactor;
+    CGFloat y = CGRectGetHeight(frame) * offsetFactor;
+    CGFloat size = MIN(CGRectGetWidth(frame), CGRectGetHeight(frame))
+    * GRID_FRAME_SIZE_FACTOR;
+    CGRect gridFrame = CGRectMake(x, y + size + (size * NUM_PAD_OFFSET_FACTOR),
+        size, size * NUM_PAD_HEIGHT_FACTOR);
+    
+    _numPadView = [[KAMSNumPadView alloc] initWithFrame:gridFrame];
+    [self.view addSubview:_numPadView];
+}
+
 - (void)setInitialGridValues
 {
     for (int col = 0; col < 9; ++col) {
         for (int row = 0; row < 9; ++row) {
-            int value = INITIAL_GRID[row][col];
+            int value = [_gridModel getValueAtRow:row atColumn:col];
             // 0 represents an empty cell
             if (value != 0) {
-                [_gridView setValueAtRow:row atColumn:col toValue:value];
+                [_gridView setInitialValueAtRow:row atColumn:col toValue:value];
             }
         }
     }
 }
 
+- (void)initializeGridModel
+{
+    _gridModel = [[KAMSGridModel alloc] init];
+    [_gridModel generateGrid];
+}
 @end
