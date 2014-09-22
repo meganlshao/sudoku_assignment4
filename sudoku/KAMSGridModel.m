@@ -126,6 +126,4 @@ static int INITIAL_GRID[9][9] = {
     }
     return YES;
 }
-
-
 @end

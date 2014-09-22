@@ -115,5 +115,4 @@ static float NUM_PAD_HEIGHT_FACTOR = 1.0 / 7;
     _gridModel = [[KAMSGridModel alloc] init];
     [_gridModel generateGrid];
 }
-
 @end
