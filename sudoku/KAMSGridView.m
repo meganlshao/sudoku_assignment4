@@ -17,7 +17,7 @@ static int NUM_LARGE_GRID_BORDERS = 4;
 static int NUM_SMALL_GRID_BORDERS = 6;
 
 @interface KAMSGridView() {
-    NSMutableArray* _cells;
+    NSMutableArray *_cells;
     id _target;
     SEL _action;
 }
@@ -57,7 +57,7 @@ static int NUM_SMALL_GRID_BORDERS = 6;
                 
                 CGRect buttonFrame = CGRectMake(horizontalOffset,
                     verticalOffset, buttonSize, buttonSize);
-                UIButton* gridButton =
+                UIButton *gridButton =
                     [[UIButton alloc] initWithFrame:buttonFrame];
                 [gridButton setBackgroundImage:[KAMSSolidImageUtility
                     imageWithColor:[UIColor whiteColor]]
@@ -84,7 +84,7 @@ static int NUM_SMALL_GRID_BORDERS = 6;
  */
 - (void)setValueAtRow:(int)row atColumn:(int)column toValue:(int)value
 {
-    UIButton* selected = [[_cells objectAtIndex:row] objectAtIndex:column];
+    UIButton *selected = [[_cells objectAtIndex:row] objectAtIndex:column];
     [selected setTitle:[NSString stringWithFormat:@"%d", value]
         forState:UIControlStateNormal];
 }
@@ -95,7 +95,7 @@ static int NUM_SMALL_GRID_BORDERS = 6;
  */
 - (void)setInitialValueAtRow:(int)row atColumn:(int)column toValue:(int)value
 {
-    UIButton* cell = [[_cells objectAtIndex:row] objectAtIndex:column];
+    UIButton *cell = [[_cells objectAtIndex:row] objectAtIndex:column];
     [cell setTitleColor:[KAMSGridView initialCellTextColor]
         forState:UIControlStateNormal];
     [cell setBackgroundImage:[KAMSSolidImageUtility
@@ -150,12 +150,12 @@ static int NUM_SMALL_GRID_BORDERS = 6;
     return largeBorderOffsets + smallBorderOffsets + offsetsFromPreviousButtons;
 }
 
-+ (UIColor*) initialCellTextColor
++ (UIColor*)initialCellTextColor
 {
     return [UIColor blueColor];
 }
 
-+ (UIColor*) cellTextColor
++ (UIColor*)cellTextColor
 {
     return [UIColor blackColor];
 }

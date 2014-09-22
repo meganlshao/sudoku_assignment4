@@ -11,7 +11,7 @@
 
 @implementation KAMSNumPadView {
     int _currentValue;
-    NSMutableArray* _numberCells;
+    NSMutableArray *_numberCells;
 }
 
 static float BORDER_RATIO = 0.5;
@@ -34,7 +34,7 @@ static float BORDER_RATIO = 0.5;
             int offsetX = ((BORDER_RATIO * i) + (i - 1)) * buttonSize;
             CGRect buttonFrame = CGRectMake(offsetX, offsetY, buttonSize,
                 buttonSize);
-            UIButton* numberCell = [[UIButton alloc]
+            UIButton *numberCell = [[UIButton alloc]
                 initWithFrame: buttonFrame];
             [numberCell addTarget:self action:@selector(cellSelected:)
                  forControlEvents:UIControlEventTouchUpInside];
@@ -70,13 +70,12 @@ static float BORDER_RATIO = 0.5;
 
 -(void)setCellActive:(int)newCellIndex
 {
-    UIButton* previousCell = [_numberCells objectAtIndex:_currentValue - 1];
+    UIButton *previousCell = [_numberCells objectAtIndex:_currentValue - 1];
     [previousCell setBackgroundImage:[KAMSSolidImageUtility
         imageWithColor:[UIColor whiteColor]] forState:UIControlStateNormal];
-    UIButton* newCell = [_numberCells objectAtIndex:newCellIndex - 1];
+    UIButton *newCell = [_numberCells objectAtIndex:newCellIndex - 1];
     [newCell setBackgroundImage:[KAMSSolidImageUtility
         imageWithColor:[UIColor yellowColor]] forState:UIControlStateNormal];
     _currentValue = newCellIndex;
-    
 }
 @end

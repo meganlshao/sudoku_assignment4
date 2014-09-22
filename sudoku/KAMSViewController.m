@@ -15,10 +15,8 @@
 static float GRID_FRAME_SIZE_FACTOR = 0.8;
 
 static float NUM_PAD_OFFSET_FACTOR = 0.1;
-#warning fix it
 static float NUM_PAD_HEIGHT_FACTOR = 1.0 / 7;
 
-#warning check other places for * with name not type
 @interface KAMSViewController () {
     KAMSGridView *_gridView;
     KAMSNumPadView *_numPadView;
@@ -85,7 +83,6 @@ static float NUM_PAD_HEIGHT_FACTOR = 1.0 / 7;
 
 - (void)initializeNumPadView
 {
-#warning put this calculation elsewhere
     float offsetFactor = (1 - GRID_FRAME_SIZE_FACTOR) / 2.0;
     
     CGRect frame = self.view.frame;

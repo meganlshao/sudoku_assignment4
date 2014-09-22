@@ -14,7 +14,7 @@
  * Returns an image of a given solid color.
  * Obtained from http://stackoverflow.com/questions/6496441/
  */
-+ (UIImage *)imageWithColor:(UIColor *)color
++ (UIImage*)imageWithColor:(UIColor*)color
 {
     CGRect rect = CGRectMake(0, 0, 1, 1);
     UIGraphicsBeginImageContext(rect.size);

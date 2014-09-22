@@ -10,6 +10,6 @@
 
 @interface KAMSSolidImageUtility : NSObject
 
-+(UIImage *) imageWithColor:(UIColor *)color;
++(UIImage*) imageWithColor:(UIColor*)color;
 
 @end
