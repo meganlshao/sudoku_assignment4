@@ -7,6 +7,7 @@
 //
 
 #import "KAMSGridView.h"
+#import "KAMSSolidImageUtility.h"
 
 // Border to button size ratios.
 static float LARGE_GRID_BORDER_RATIO = 0.5;
@@ -58,7 +59,7 @@ static int NUM_SMALL_GRID_BORDERS = 6;
                     verticalOffset, buttonSize, buttonSize);
                 UIButton* gridButton =
                     [[UIButton alloc] initWithFrame:buttonFrame];
-                [gridButton setBackgroundImage:[KAMSGridView
+                [gridButton setBackgroundImage:[KAMSSolidImageUtility
                     imageWithColor:[UIColor whiteColor]]
                     forState:UIControlStateNormal];
                 [gridButton setTitleColor:[KAMSGridView cellTextColor]
@@ -76,22 +77,6 @@ static int NUM_SMALL_GRID_BORDERS = 6;
         }
     }
     return self;
-}
-
-// Obtained from http://stackoverflow.com/questions/6496441/
-+ (UIImage *)imageWithColor:(UIColor *)color
-{
-    CGRect rect = CGRectMake(0, 0, 1, 1);
-    UIGraphicsBeginImageContext(rect.size);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextSetFillColorWithColor(context, [color CGColor]);
-    CGContextFillRect(context, rect);
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return image;
 }
 
 /**
@@ -113,7 +98,8 @@ static int NUM_SMALL_GRID_BORDERS = 6;
     UIButton* cell = [[_cells objectAtIndex:row] objectAtIndex:column];
     [cell setTitleColor:[KAMSGridView initialCellTextColor]
         forState:UIControlStateNormal];
-    [cell setBackgroundImage:[KAMSGridView imageWithColor:[UIColor whiteColor]]
+    [cell setBackgroundImage:[KAMSSolidImageUtility
+        imageWithColor:[UIColor whiteColor]]
         forState:UIControlStateDisabled];
     [cell setEnabled:NO];
     [self setValueAtRow:row atColumn:column toValue:value];

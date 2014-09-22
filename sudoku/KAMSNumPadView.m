@@ -7,6 +7,7 @@
 //
 
 #import "KAMSNumPadView.h"
+#import "KAMSSolidImageUtility.h"
 
 @implementation KAMSNumPadView {
     int _currentValue;
@@ -37,7 +38,7 @@ static float BORDER_RATIO = 0.5;
                 initWithFrame: buttonFrame];
             [numberCell addTarget:self action:@selector(cellSelected:)
                  forControlEvents:UIControlEventTouchUpInside];
-            [numberCell setBackgroundImage:[KAMSNumPadView
+            [numberCell setBackgroundImage:[KAMSSolidImageUtility
                 imageWithColor:[UIColor whiteColor]]
                 forState:UIControlStateNormal];
             [numberCell setTitle:[NSString stringWithFormat:@"%d", i]
@@ -70,29 +71,12 @@ static float BORDER_RATIO = 0.5;
 -(void)setCellActive:(int)newCellIndex
 {
     UIButton* previousCell = [_numberCells objectAtIndex:_currentValue - 1];
-    [previousCell setBackgroundImage:[KAMSNumPadView
+    [previousCell setBackgroundImage:[KAMSSolidImageUtility
         imageWithColor:[UIColor whiteColor]] forState:UIControlStateNormal];
     UIButton* newCell = [_numberCells objectAtIndex:newCellIndex - 1];
-    [newCell setBackgroundImage:[KAMSNumPadView
+    [newCell setBackgroundImage:[KAMSSolidImageUtility
         imageWithColor:[UIColor yellowColor]] forState:UIControlStateNormal];
     _currentValue = newCellIndex;
     
-}
-
-#warning TODO make this in own utility class for grid and numpad view
-// Obtained from http://stackoverflow.com/questions/6496441/
-+ (UIImage *)imageWithColor:(UIColor *)color
-{
-    CGRect rect = CGRectMake(0, 0, 1, 1);
-    UIGraphicsBeginImageContext(rect.size);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextSetFillColorWithColor(context, [color CGColor]);
-    CGContextFillRect(context, rect);
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return image;
 }
 @end
